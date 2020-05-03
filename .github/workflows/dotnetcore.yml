@@ -26,7 +26,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore ./src/BbcCorp.Neo4j.NeoGraphManager.sln
     
     - name: Test
-      run: cd ./src/BbcCorp.Neo4j.Tests
-      run: docker-compose up -d
-      run: dotnet test --no-restore --verbosity normal BbcCorp.Neo4j.Tests.csproj
-      run: docker-compose down
+      run: |
+        cd ./src/BbcCorp.Neo4j.Tests
+        docker-compose up -d
+        dotnet test --no-restore --verbosity normal BbcCorp.Neo4j.Tests.csproj
+        docker-compose down
