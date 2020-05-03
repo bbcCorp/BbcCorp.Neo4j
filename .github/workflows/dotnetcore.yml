@@ -13,13 +13,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    
     - name: Install dependencies
       run: dotnet restore  ./src/BbcCorp.Neo4j.NeoGraphManager.sln
+    
     - name: Build
       run: dotnet build --configuration Release --no-restore ./src/BbcCorp.Neo4j.NeoGraphManager.sln
+    
     - name: Test
-      run: dotnet test --no-restore --verbosity normal ./src/BbcCorp.Neo4j.Tests/BbcCorp.Neo4j.Tests.csproj
+      run: cd ./src/BbcCorp.Neo4j.Tests
+      run: docker-compose up -d
+      run: dotnet test --no-restore --verbosity normal BbcCorp.Neo4j.Tests.csproj
+      run: docker-compose down
