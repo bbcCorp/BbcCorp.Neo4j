@@ -13,11 +13,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - uses: baptouuuu/setup-neo4j@v1.0.0
+      with:
+        tag: '4.0.1'     
+        
+        
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    
+
     - name: Install dependencies
       run: dotnet restore  ./src/BbcCorp.Neo4j.NeoGraphManager.sln
     
@@ -27,6 +32,6 @@ jobs:
     - name: Run Integration Tests 
       run: |
         cd ./src/BbcCorp.Neo4j.Tests
-        docker-compose up -d
+        # docker-compose up -d
         dotnet test --no-restore --verbosity normal BbcCorp.Neo4j.Tests.csproj
-        docker-compose down
+        # docker-compose down

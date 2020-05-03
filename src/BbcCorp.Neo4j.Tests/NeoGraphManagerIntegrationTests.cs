@@ -20,6 +20,8 @@ namespace BbcCorp.Neo4j.Tests
         {
             this.INTEGRATION_TESTNODE_LABEL = $"NodeGraphManager_{Guid.NewGuid().ToString("N")}";
 
+            Console.WriteLine($"Using Neo4j Server:{Configuration["NEO4J_DB_URL"]} as {Configuration["NEO4J_DB_USER"]}/{Configuration["NEO4J_DB_PWD"]}");
+
             this.gm = new NeoGraphManager(
                 loggerFactory.CreateLogger<NeoGraphManager>(),
                 Configuration["NEO4J_DB_URL"],
