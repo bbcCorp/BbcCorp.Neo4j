@@ -24,10 +24,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore ./src/BbcCorp.Neo4j.NeoGraphManager.sln
     
-    - name: Run Integration Tests
-      uses: docker://neo4j:4.0.1
-      env:
-        NEO4J_DB_URL: "bolt://localhost:7687"  
+    - name: Run Integration Tests 
       run: |
         cd ./src/BbcCorp.Neo4j.Tests
         docker-compose up -d
