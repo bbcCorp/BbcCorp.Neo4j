@@ -1,0 +1,7 @@
+neo4j:
+    image: neo4j:4.0.1          
+    ports:                    
+     - "7474:7474" # used for http
+     - "7687:7687" # used for bolt
+    environment:       
+       NEO4J_AUTH: neo4j/password    
