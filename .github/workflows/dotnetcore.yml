@@ -26,7 +26,7 @@ jobs:
     
     - name: Run Integration Tests 
       env:
-        NEO4J_DB_URL: "bolt://localhost:7687"
+        NEO4J_DB_URL: "bolt://neo4j-server:7687"
       run: |
         cd ./src/BbcCorp.Neo4j.Tests
         docker-compose up -d
