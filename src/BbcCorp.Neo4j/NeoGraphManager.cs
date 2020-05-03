@@ -14,8 +14,10 @@ namespace BbcCorp.Neo4j
         private readonly IDriver _driver;
         private readonly string _database;
 
-        public NeoGraphManager(ILogger<NeoGraphManager> logger, String uri, String user, String password, string database="neo4j")
+        public NeoGraphManager(ILogger<NeoGraphManager> logger, String server, String user, String password, string database="neo4j", int port=7687)
         {
+            var uri = $"bolt://{server}:{port}";
+
             _logger = logger;
             
             _driver = CreateDriverWithCustomizedConnectionPool(uri, user, password);

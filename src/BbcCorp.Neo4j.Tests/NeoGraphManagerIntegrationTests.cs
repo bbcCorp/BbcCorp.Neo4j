@@ -20,13 +20,14 @@ namespace BbcCorp.Neo4j.Tests
         {
             this.INTEGRATION_TESTNODE_LABEL = $"NodeGraphManager_{Guid.NewGuid().ToString("N")}";
 
-            Console.WriteLine($"Using Neo4j Server:{Configuration["NEO4J_DB_URL"]} as {Configuration["NEO4J_DB_USER"]}/{Configuration["NEO4J_DB_PWD"]}");
+            Console.WriteLine($"Using Neo4j Server {Configuration["NEO4J_SERVER"]}:{Configuration["NEO4J_PORT"]} as {Configuration["NEO4J_DB_USER"]}/{Configuration["NEO4J_DB_PWD"]}");
 
             this.gm = new NeoGraphManager(
-                loggerFactory.CreateLogger<NeoGraphManager>(),
-                Configuration["NEO4J_DB_URL"],
-                Configuration["NEO4J_DB_USER"],
-                Configuration["NEO4J_DB_PWD"]);
+                logger: loggerFactory.CreateLogger<NeoGraphManager>(),
+                server: Configuration["NEO4J_SERVER"],
+                port: Convert.ToInt16(Configuration["NEO4J_PORT"]),
+                user: Configuration["NEO4J_DB_USER"],
+                password: Configuration["NEO4J_DB_PWD"]);
         }
 
         private async Task CreateNNodes(int count)

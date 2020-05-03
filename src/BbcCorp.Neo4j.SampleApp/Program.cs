@@ -30,7 +30,10 @@ namespace BbcCorp.Neo4j.SampleApp
 
             var gm = new NeoGraphManager(
                 loggerFactory.CreateLogger<NeoGraphManager>(), 
-                "bolt://localhost:7687", "neo4j", "password");
+                server: "localhost", port: 7687, 
+                user: "neo4j", 
+                password: "password");
+                
             try
             {
                 // Clear all Greeting nodes
