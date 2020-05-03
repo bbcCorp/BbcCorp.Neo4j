@@ -18,9 +18,25 @@ namespace BbcCorp.Neo4j
         {
             _logger = logger;
             
-            _driver = GraphDatabase.Driver(uri, AuthTokens.Basic(user, password));
+            _driver = CreateDriverWithCustomizedConnectionPool(uri, user, password);
 
             _database = database;
+        }
+
+        public IDriver CreateDriverWithCustomizedConnectionPool(string uri, string user, string password, 
+            int maxConnectionLifetime=30, // 30 minutes
+            int maxConnectionPoolSize=50,
+            int connectionAcquisitionTimeout = 2, // 2 minutes
+            int maxTransactionRetryTime = 15 // seconds
+            )
+        {
+            return GraphDatabase.Driver(uri, AuthTokens.Basic(user, password),
+                o => o
+                    .WithEncryptionLevel(EncryptionLevel.None)
+                    .WithMaxTransactionRetryTime(TimeSpan.FromSeconds(maxTransactionRetryTime))
+                    .WithMaxConnectionLifetime(TimeSpan.FromMinutes(maxConnectionLifetime))
+                    .WithMaxConnectionPoolSize(maxConnectionPoolSize)
+                    .WithConnectionAcquisitionTimeout(TimeSpan.FromMinutes(connectionAcquisitionTimeout)));
         }
 
         public async Task ExecuteNonQuery(string cypherQuery, object queryParams=null)
