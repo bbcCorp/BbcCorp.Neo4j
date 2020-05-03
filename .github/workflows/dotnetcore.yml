@@ -27,8 +27,7 @@ jobs:
     - name: Run Integration Tests
       uses: docker://neo4j:4.0.1
       env:
-        MY_VAR: Hi there! My name is
-        FIRST_NAME: Mona    
+        NEO4J_DB_URL: "bolt://localhost:7687"  
       run: |
         cd ./src/BbcCorp.Neo4j.Tests
         docker-compose up -d
