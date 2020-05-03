@@ -20,6 +20,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore ./src/BbcCorp.Neo4j.NeoGraphManager.sln
     - name: Test
       run: dotnet test --no-restore --verbosity normal ./src/BbcCorp.Neo4j.Tests/BbcCorp.Neo4j.Tests.csproj
