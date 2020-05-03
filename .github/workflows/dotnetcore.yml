@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +24,11 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore ./src/BbcCorp.Neo4j.NeoGraphManager.sln
     
-    - name: Test
+    - name: Run Integration Tests
+      uses: docker://neo4j:4.0.1
+      env:
+        MY_VAR: Hi there! My name is
+        FIRST_NAME: Mona    
       run: |
         cd ./src/BbcCorp.Neo4j.Tests
         docker-compose up -d

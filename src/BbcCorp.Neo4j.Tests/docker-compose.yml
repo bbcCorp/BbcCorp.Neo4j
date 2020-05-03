@@ -4,4 +4,5 @@ neo4j:
      - "7474:7474" # used for http
      - "7687:7687" # used for bolt
     environment:       
-       NEO4J_AUTH: neo4j/password    
+       NEO4J_AUTH: neo4j/password  
+       NEO4J_dbms_default_listen_address: 0.0.0.0  

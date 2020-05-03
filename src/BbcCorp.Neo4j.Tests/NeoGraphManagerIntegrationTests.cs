@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using Moq;
 using BbcCorp.Neo4j;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using System.Linq;
 
 namespace BbcCorp.Neo4j.Tests
 {
-    public class NeoGraphManagerIntegrationTests
+    public class NeoGraphManagerIntegrationTests : TestBase
     {
         private readonly string INTEGRATION_TESTNODE_LABEL;
         private readonly INeoGraphManager gm;
@@ -19,10 +20,11 @@ namespace BbcCorp.Neo4j.Tests
         {
             this.INTEGRATION_TESTNODE_LABEL = $"NodeGraphManager_{Guid.NewGuid().ToString("N")}";
 
-            var loggerFactory = new NullLoggerFactory();
             this.gm = new NeoGraphManager(
                 loggerFactory.CreateLogger<NeoGraphManager>(),
-                "bolt://localhost:7687", "neo4j", "password");
+                Configuration["NEO4J_DB_URL"],
+                Configuration["NEO4J_DB_USER"],
+                Configuration["NEO4J_DB_PWD"]);
         }
 
         private async Task CreateNNodes(int count)
