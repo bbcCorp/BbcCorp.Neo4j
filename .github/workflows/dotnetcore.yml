@@ -17,7 +17,6 @@ jobs:
       with:
         tag: '4.0.1'     
         
-        
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -30,6 +29,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore ./src/BbcCorp.Neo4j.NeoGraphManager.sln
     
     - name: Run Integration Tests 
+      env:
+        NEO4J_DB_URL: "bolt://:7687"
       run: |
         cd ./src/BbcCorp.Neo4j.Tests
         # docker-compose up -d
