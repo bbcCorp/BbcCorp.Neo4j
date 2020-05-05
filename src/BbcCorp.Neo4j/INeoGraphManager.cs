@@ -13,6 +13,10 @@ namespace BbcCorp.Neo4j
         Task<List<T>> FetchRecords<T>(Func<IRecord, T> recordProcessor, string cypherQuery, object queryParams=null);
 
         IAsyncEnumerable<List<T>> FetchRecordsAsStream<T>(Func<IRecord, T> recordProcessor, string cypherQuery, object queryParams = null, long bufferSize = 100);
-    
+
+        Task createIndex(String nodeLabel, String field);
+        Task dropIndex(String nodeLabel, String field);
+        Task createUniqueConstraint(String nodeLabel, String field);
+
     }
 }

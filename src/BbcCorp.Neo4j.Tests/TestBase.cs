@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace BbcCorp.Neo4j.Tests
 {
-    public class TestBase
+    public class TestBase : IDisposable
     {
         protected IConfigurationRoot Configuration  { get; private set; }
         protected ILoggerFactory loggerFactory;
@@ -26,5 +26,12 @@ namespace BbcCorp.Neo4j.Tests
                 .AddEnvironmentVariables()
                 .Build();
         }
+
+        public virtual void Dispose()
+        {
+            loggerFactory = null;
+            Configuration = null;
+        }
     }
+
 }

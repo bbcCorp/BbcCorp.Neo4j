@@ -201,6 +201,42 @@ namespace BbcCorp.Neo4j
         }
 
 
+        public async Task createIndex(String nodeLabel, String field)
+        {
+            _logger.LogDebug($"Creating index on {nodeLabel}:{field}");
+
+            var query = $"CREATE INDEX ON :{nodeLabel}({field})";
+
+            await this.ExecuteNonQuery(query);
+
+            _logger.LogInformation($"Created index on {nodeLabel}:{field}");
+        }
+
+        public async Task dropIndex(String nodeLabel, String field)
+        {
+            _logger.LogDebug($"Dropping index on {nodeLabel}:{field}");
+
+            var query = $"DROP INDEX ON :{nodeLabel}({field})";
+
+            await this.ExecuteNonQuery(query);
+
+            _logger.LogInformation($"Dropped index on {nodeLabel}:{field}");
+        }
+
+
+        public async Task createUniqueConstraint(String nodeLabel, String field)
+        {
+            _logger.LogDebug($"Creating unique constraint on {nodeLabel}:{field}");
+
+            var query = $"CREATE CONSTRAINT ON (n:{nodeLabel}) ASSERT n.{field} IS UNIQUE";
+
+            await this.ExecuteNonQuery(query);
+
+            _logger.LogInformation($"Created unique constraint on {nodeLabel}:{field}");
+        }
+
+
+
         public void Dispose()
         {
             _driver?.Dispose();

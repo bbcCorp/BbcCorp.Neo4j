@@ -11,10 +11,13 @@ using System.Linq;
 
 namespace BbcCorp.Neo4j.Tests
 {
-    public class NeoGraphManagerIntegrationTests : TestBase
+    public class NeoGraphManagerIntegrationTests : TestBase, IAsyncDisposable
     {
         private readonly string INTEGRATION_TESTNODE_LABEL;
         private readonly INeoGraphManager gm;
+
+        private readonly string resetDbQuery;
+        private readonly string nodeCountQuery;
 
         public NeoGraphManagerIntegrationTests()
         {
@@ -28,6 +31,20 @@ namespace BbcCorp.Neo4j.Tests
                 port: Convert.ToInt16(Configuration["NEO4J_PORT"]),
                 user: Configuration["NEO4J_DB_USER"],
                 password: Configuration["NEO4J_DB_PWD"]);
+
+
+            // Clear all {INTEGRATION_TESTNODE_LABEL} nodes
+            resetDbQuery = $"MATCH (n:{INTEGRATION_TESTNODE_LABEL}) DELETE n ";
+            nodeCountQuery = $"MATCH (n:{INTEGRATION_TESTNODE_LABEL}) return COUNT(n)";
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            // ... clean up test data from the database ...
+
+            // Remove all {INTEGRATION_TESTNODE_LABEL} nodes
+            await gm.ExecuteNonQuery(resetDbQuery);
+
         }
 
         private async Task CreateNNodes(int count)
@@ -44,12 +61,11 @@ namespace BbcCorp.Neo4j.Tests
         [Fact]
         public async Task SimpleNodeTests()
         {
-            // Clear all {INTEGRATION_TESTNODE_LABEL} nodes
-            var resetDbQuery = $"MATCH (n:{INTEGRATION_TESTNODE_LABEL}) DELETE n ";
+            
             await gm.ExecuteNonQuery(resetDbQuery);
             //Console.WriteLine($"Removed all nodes with label:{INTEGRATION_TESTNODE_LABEL}");
 
-            var nodeCountQuery = $"MATCH (n:{INTEGRATION_TESTNODE_LABEL}) return COUNT(n)";
+            
             var count = await gm.ExecuteScalar<int>(nodeCountQuery);
             Assert.Equal(0, count);
 
@@ -123,9 +139,28 @@ namespace BbcCorp.Neo4j.Tests
             }
             Assert.Equal(22, totalRecsProcessed);
 
+            
+        }
+
+        [Fact]
+        public async Task ManageIndexTests()
+        {
+
+            // Create a greeting node
+            var query = $"CREATE (a:{INTEGRATION_TESTNODE_LABEL}" +
+                "{message: $message, createdBy: $user, createdOn: TIMESTAMP() }) ";
+            await gm.ExecuteNonQuery(query, new { message = "hello, world", user = "bbc" });
+
+            await gm.createIndex(nodeLabel:INTEGRATION_TESTNODE_LABEL, field:"message");
+
+            await CreateNNodes(4);
+            Assert.Equal(5, await gm.ExecuteScalar<int>(nodeCountQuery));
+
+            await gm.dropIndex(nodeLabel: INTEGRATION_TESTNODE_LABEL, field: "message");
+
             // Remove all {INTEGRATION_TESTNODE_LABEL} nodes
             await gm.ExecuteNonQuery(resetDbQuery);
-            //Console.WriteLine($"Removed all nodes with label:{INTEGRATION_TESTNODE_LABEL}");
+
         }
     }
 }
